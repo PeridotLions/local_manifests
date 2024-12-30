@@ -1,0 +1,96 @@
+From e3bbd377774f9577f4159f77018e220cc60b1786 Mon Sep 17 00:00:00 2001
+From: raghavt20 <raghavtandon2000@gmail.com>
+Date: Fri, 28 Jun 2024 14:50:04 +0530
+Subject: [PATCH] hardware/xiaomi: Import reversed aidl interface for
+ IXiaomiFingerprint
+
+Change-Id: I0d60666324d986333dc10824250d90fe42ab878a
+---
+ .../fingerprintextension/aidl/Android.bp      | 27 +++++++++++++++++++
+ .../1/.hash                                   |  1 +
+ .../IXiaomiFingerprint.aidl                   |  6 +++++
+ .../IXiaomiFingerprint.aidl                   |  6 +++++
+ .../IXiaomiFingerprint.aidl                   |  6 +++++
+ 5 files changed, 46 insertions(+)
+ create mode 100644 interfaces/xiaomi/hardware/fingerprintextension/aidl/Android.bp
+ create mode 100644 interfaces/xiaomi/hardware/fingerprintextension/aidl/aidl_api/vendor.xiaomi.hardware.fingerprintextension/1/.hash
+ create mode 100644 interfaces/xiaomi/hardware/fingerprintextension/aidl/aidl_api/vendor.xiaomi.hardware.fingerprintextension/1/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl
+ create mode 100644 interfaces/xiaomi/hardware/fingerprintextension/aidl/aidl_api/vendor.xiaomi.hardware.fingerprintextension/current/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl
+ create mode 100644 interfaces/xiaomi/hardware/fingerprintextension/aidl/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl
+
+diff --git a/interfaces/xiaomi/hardware/fingerprintextension/aidl/Android.bp b/interfaces/xiaomi/hardware/fingerprintextension/aidl/Android.bp
+new file mode 100644
+index 0000000..0445b27
+--- /dev/null
++++ b/interfaces/xiaomi/hardware/fingerprintextension/aidl/Android.bp
+@@ -0,0 +1,27 @@
++aidl_interface {
++    name: "vendor.xiaomi.hardware.fingerprintextension",
++    vendor_available: true,
++    srcs: [
++        "vendor/xiaomi/hardware/fingerprintextension/*.aidl",
++    ],
++    stability: "vintf",
++    backend: {
++        java: {
++            sdk_version: "module_current",
++            min_sdk_version: "30",
++            lint: {
++                // Disable linter to avoid error about fixed size arrays.
++                // Interface will only be accessed on devices >= U.
++                enabled: false,
++            },
++        },
++    },
++    owner: "xiaomi",
++    versions_with_info: [
++        {
++            version: "1",
++            imports: [],
++        },
++    ],
++    frozen: true,
++}
+diff --git a/interfaces/xiaomi/hardware/fingerprintextension/aidl/aidl_api/vendor.xiaomi.hardware.fingerprintextension/1/.hash b/interfaces/xiaomi/hardware/fingerprintextension/aidl/aidl_api/vendor.xiaomi.hardware.fingerprintextension/1/.hash
+new file mode 100644
+index 0000000..eaa7dcb
+--- /dev/null
++++ b/interfaces/xiaomi/hardware/fingerprintextension/aidl/aidl_api/vendor.xiaomi.hardware.fingerprintextension/1/.hash
+@@ -0,0 +1 @@
++86a025226d979f72a91d348bd1f5e904e4ac64a1
+diff --git a/interfaces/xiaomi/hardware/fingerprintextension/aidl/aidl_api/vendor.xiaomi.hardware.fingerprintextension/1/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl b/interfaces/xiaomi/hardware/fingerprintextension/aidl/aidl_api/vendor.xiaomi.hardware.fingerprintextension/1/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl
+new file mode 100644
+index 0000000..d139b5c
+--- /dev/null
++++ b/interfaces/xiaomi/hardware/fingerprintextension/aidl/aidl_api/vendor.xiaomi.hardware.fingerprintextension/1/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl
+@@ -0,0 +1,6 @@
++package vendor.xiaomi.hardware.fingerprintextension;
++
++@VintfStability
++interface IXiaomiFingerprint {
++  int extCmd(int cmd, int param1);
++}
+diff --git a/interfaces/xiaomi/hardware/fingerprintextension/aidl/aidl_api/vendor.xiaomi.hardware.fingerprintextension/current/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl b/interfaces/xiaomi/hardware/fingerprintextension/aidl/aidl_api/vendor.xiaomi.hardware.fingerprintextension/current/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl
+new file mode 100644
+index 0000000..d139b5c
+--- /dev/null
++++ b/interfaces/xiaomi/hardware/fingerprintextension/aidl/aidl_api/vendor.xiaomi.hardware.fingerprintextension/current/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl
+@@ -0,0 +1,6 @@
++package vendor.xiaomi.hardware.fingerprintextension;
++
++@VintfStability
++interface IXiaomiFingerprint {
++  int extCmd(int cmd, int param1);
++}
+diff --git a/interfaces/xiaomi/hardware/fingerprintextension/aidl/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl b/interfaces/xiaomi/hardware/fingerprintextension/aidl/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl
+new file mode 100644
+index 0000000..d139b5c
+--- /dev/null
++++ b/interfaces/xiaomi/hardware/fingerprintextension/aidl/vendor/xiaomi/hardware/fingerprintextension/IXiaomiFingerprint.aidl
+@@ -0,0 +1,6 @@
++package vendor.xiaomi.hardware.fingerprintextension;
++
++@VintfStability
++interface IXiaomiFingerprint {
++  int extCmd(int cmd, int param1);
++}
