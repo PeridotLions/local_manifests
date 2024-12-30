@@ -1,0 +1,120 @@
+From 298d58637ac6a4cf4ce60dc535a933eb000cf319 Mon Sep 17 00:00:00 2001
+From: raghavt20 <raghavtandon2000@gmail.com>
+Date: Fri, 28 Jun 2024 18:17:02 +0530
+Subject: [PATCH] hardware/xiaomi: Import reversed aidl interface for
+ ITouchFeature
+
+Change-Id: Icc959b71ae4d90f81c5769de4ad16ba1a0984871
+---
+ .../xiaomi/hw/touchfeature/aidl/Android.bp    | 27 +++++++++++++++++++
+ .../vendor.xiaomi.hw.touchfeature/1/.hash     |  1 +
+ .../xiaomi/hw/touchfeature/ITouchFeature.aidl | 14 ++++++++++
+ .../xiaomi/hw/touchfeature/ITouchFeature.aidl | 14 ++++++++++
+ .../xiaomi/hw/touchfeature/ITouchFeature.aidl | 14 ++++++++++
+ 5 files changed, 70 insertions(+)
+ create mode 100644 interfaces/xiaomi/hw/touchfeature/aidl/Android.bp
+ create mode 100644 interfaces/xiaomi/hw/touchfeature/aidl/aidl_api/vendor.xiaomi.hw.touchfeature/1/.hash
+ create mode 100644 interfaces/xiaomi/hw/touchfeature/aidl/aidl_api/vendor.xiaomi.hw.touchfeature/1/vendor/xiaomi/hw/touchfeature/ITouchFeature.aidl
+ create mode 100644 interfaces/xiaomi/hw/touchfeature/aidl/aidl_api/vendor.xiaomi.hw.touchfeature/current/vendor/xiaomi/hw/touchfeature/ITouchFeature.aidl
+ create mode 100644 interfaces/xiaomi/hw/touchfeature/aidl/vendor/xiaomi/hw/touchfeature/ITouchFeature.aidl
+
+diff --git a/interfaces/xiaomi/hw/touchfeature/aidl/Android.bp b/interfaces/xiaomi/hw/touchfeature/aidl/Android.bp
+new file mode 100644
+index 0000000..cfaee09
+--- /dev/null
++++ b/interfaces/xiaomi/hw/touchfeature/aidl/Android.bp
+@@ -0,0 +1,27 @@
++aidl_interface {
++    name: "vendor.xiaomi.hw.touchfeature",
++    vendor_available: true,
++    srcs: [
++        "vendor/xiaomi/hw/touchfeature/*.aidl",
++    ],
++    stability: "vintf",
++    backend: {
++        java: {
++            sdk_version: "module_current",
++            min_sdk_version: "30",
++            lint: {
++                // Disable linter to avoid error about fixed size arrays.
++                // Interface will only be accessed on devices >= U.
++                enabled: false,
++            },
++        },
++    },
++    owner: "xiaomi",
++    versions_with_info: [
++        {
++            version: "1",
++            imports: [],
++        },
++    ],
++    frozen: true,
++}
+diff --git a/interfaces/xiaomi/hw/touchfeature/aidl/aidl_api/vendor.xiaomi.hw.touchfeature/1/.hash b/interfaces/xiaomi/hw/touchfeature/aidl/aidl_api/vendor.xiaomi.hw.touchfeature/1/.hash
+new file mode 100644
+index 0000000..b955dc9
+--- /dev/null
++++ b/interfaces/xiaomi/hw/touchfeature/aidl/aidl_api/vendor.xiaomi.hw.touchfeature/1/.hash
+@@ -0,0 +1 @@
++ce4800bd326f60275506c7297b6cbf34c4c9bc6b
+diff --git a/interfaces/xiaomi/hw/touchfeature/aidl/aidl_api/vendor.xiaomi.hw.touchfeature/1/vendor/xiaomi/hw/touchfeature/ITouchFeature.aidl b/interfaces/xiaomi/hw/touchfeature/aidl/aidl_api/vendor.xiaomi.hw.touchfeature/1/vendor/xiaomi/hw/touchfeature/ITouchFeature.aidl
+new file mode 100644
+index 0000000..8c8f35e
+--- /dev/null
++++ b/interfaces/xiaomi/hw/touchfeature/aidl/aidl_api/vendor.xiaomi.hw.touchfeature/1/vendor/xiaomi/hw/touchfeature/ITouchFeature.aidl
+@@ -0,0 +1,14 @@
++package vendor.xiaomi.hw.touchfeature;
++
++@VintfStability
++interface ITouchFeature {
++  int getModeCurValueString(int touchId, int mode);
++  int getModeValues(int touchId, int mode);
++  int getTouchModeCurValue(int touchId, int mode);
++  int getTouchModeDefValue(int touchId, int mode);
++  int getTouchModeMaxValue(int touchId, int mode);
++  int getTouchModeMinValue(int touchId, int mode);
++  boolean resetTouchMode(int touchId, int mode);
++  boolean setEdgeMode(int touchId, int mode, in int[] value, int length);
++  boolean setTouchMode(int touchId, int mode, int value);
++}
+diff --git a/interfaces/xiaomi/hw/touchfeature/aidl/aidl_api/vendor.xiaomi.hw.touchfeature/current/vendor/xiaomi/hw/touchfeature/ITouchFeature.aidl b/interfaces/xiaomi/hw/touchfeature/aidl/aidl_api/vendor.xiaomi.hw.touchfeature/current/vendor/xiaomi/hw/touchfeature/ITouchFeature.aidl
+new file mode 100644
+index 0000000..8c8f35e
+--- /dev/null
++++ b/interfaces/xiaomi/hw/touchfeature/aidl/aidl_api/vendor.xiaomi.hw.touchfeature/current/vendor/xiaomi/hw/touchfeature/ITouchFeature.aidl
+@@ -0,0 +1,14 @@
++package vendor.xiaomi.hw.touchfeature;
++
++@VintfStability
++interface ITouchFeature {
++  int getModeCurValueString(int touchId, int mode);
++  int getModeValues(int touchId, int mode);
++  int getTouchModeCurValue(int touchId, int mode);
++  int getTouchModeDefValue(int touchId, int mode);
++  int getTouchModeMaxValue(int touchId, int mode);
++  int getTouchModeMinValue(int touchId, int mode);
++  boolean resetTouchMode(int touchId, int mode);
++  boolean setEdgeMode(int touchId, int mode, in int[] value, int length);
++  boolean setTouchMode(int touchId, int mode, int value);
++}
+diff --git a/interfaces/xiaomi/hw/touchfeature/aidl/vendor/xiaomi/hw/touchfeature/ITouchFeature.aidl b/interfaces/xiaomi/hw/touchfeature/aidl/vendor/xiaomi/hw/touchfeature/ITouchFeature.aidl
+new file mode 100644
+index 0000000..8c8f35e
+--- /dev/null
++++ b/interfaces/xiaomi/hw/touchfeature/aidl/vendor/xiaomi/hw/touchfeature/ITouchFeature.aidl
+@@ -0,0 +1,14 @@
++package vendor.xiaomi.hw.touchfeature;
++
++@VintfStability
++interface ITouchFeature {
++  int getModeCurValueString(int touchId, int mode);
++  int getModeValues(int touchId, int mode);
++  int getTouchModeCurValue(int touchId, int mode);
++  int getTouchModeDefValue(int touchId, int mode);
++  int getTouchModeMaxValue(int touchId, int mode);
++  int getTouchModeMinValue(int touchId, int mode);
++  boolean resetTouchMode(int touchId, int mode);
++  boolean setEdgeMode(int touchId, int mode, in int[] value, int length);
++  boolean setTouchMode(int touchId, int mode, int value);
++}
