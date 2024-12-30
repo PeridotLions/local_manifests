@@ -11,3 +11,8 @@ cd hardware/xiaomi && curl -s https://raw.githubusercontent.com/PeridotLions/loc
 curl -s https://raw.githubusercontent.com/PeridotLions/local_manifests/los-22.1/patches/hardware/xiaomi/298d58637ac6a4cf4ce60dc535a933eb000cf319.patch | git am - && cd -
 
 ```
+
+## Pineapple platform support
+```
+cd hardware/qcom-caf/common && curl -s https://raw.githubusercontent.com/PeridotLions/local_manifests/los-22.1/patches/hardware/qcom-caf/common/cec05faa45fa52528dc428d3a2193ef4f17f4835.patch | git am - && cd -
+```
