@@ -1,0 +1,168 @@
+From 5320b6c6b4b1739044dfc657060d859f688d9642 Mon Sep 17 00:00:00 2001
+From: AdarshGrewal <adarshgrewal@gmail.com>
+Date: Sat, 10 Aug 2024 14:08:50 +0530
+Subject: [PATCH] DNM: SystemUI: Add xiaomi fingerprintextension and
+ touchfeature calls
+
+ * before you bully me for this this only till i get fp aidl done
+
+PugzAreCute: Adapt for LineageOS
+
+Change-Id: I7e14868f03c7417a413388b0ecb3ca8430165aed
+---
+ packages/SystemUI/Android.bp                  |  2 +
+ .../systemui/biometrics/UdfpsController.java  | 55 +++++++++++++++++++
+ services/core/Android.bp                      |  2 +
+ 3 files changed, 59 insertions(+)
+
+diff --git a/packages/SystemUI/Android.bp b/packages/SystemUI/Android.bp
+index bb9f690a6b21..ea017b5ccce7 100644
+--- a/packages/SystemUI/Android.bp
++++ b/packages/SystemUI/Android.bp
+@@ -585,10 +585,12 @@ android_library {
+         "androidx.compose.material_material-icons-extended",
+         "androidx.activity_activity-compose",
+         "androidx.compose.animation_animation-graphics",
+         "androidx.lifecycle_lifecycle-viewmodel-compose",
+         "vendor.lineage.powershare-V1.0-java",
++        "vendor.xiaomi.hardware.fingerprintextension-V1-java",
++        "vendor.xiaomi.hw.touchfeature-V1-java",
+     ],
+     libs: [
+         "keepanno-annotations",
+     ],
+     manifest: "AndroidManifest.xml",
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java
+index 75938eb9f9e5..da4f715b6d29 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java
+@@ -116,10 +116,13 @@ import dagger.Lazy;
+ import kotlin.Unit;
+ 
+ import kotlinx.coroutines.CoroutineScope;
+ import kotlinx.coroutines.ExperimentalCoroutinesApi;
+ 
++import vendor.xiaomi.hardware.fingerprintextension.IXiaomiFingerprint;
++import vendor.xiaomi.hw.touchfeature.ITouchFeature;
++
+ import java.io.PrintWriter;
+ import java.util.ArrayList;
+ import java.util.HashSet;
+ import java.util.Set;
+ import java.util.concurrent.Executor;
+@@ -187,10 +190,13 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+     @NonNull private final UdfpsKeyguardAccessibilityDelegate mUdfpsKeyguardAccessibilityDelegate;
+     @NonNull private final SelectedUserInteractor mSelectedUserInteractor;
+     private final boolean mIgnoreRefreshRate;
+     private final KeyguardTransitionInteractor mKeyguardTransitionInteractor;
+ 
++    private static ITouchFeature xaiomiTouchFeatureAidl = null;
++    private static IXiaomiFingerprint xaiomiFingerprintExtensionAidl = null;
++
+     // Currently the UdfpsController supports a single UDFPS sensor. If devices have multiple
+     // sensors, this, in addition to a lot of the code here, will be updated.
+     @VisibleForTesting @NonNull FingerprintSensorPropertiesInternal mSensorProps;
+     @VisibleForTesting @NonNull UdfpsOverlayParams mOverlayParams = new UdfpsOverlayParams();
+     // TODO(b/229290039): UDFPS controller should manage its dimensions on its own. Remove this.
+@@ -257,10 +263,53 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+         public void onScreenTurnedOff() {
+             mScreenOn = false;
+         }
+     };
+ 
++private static void xaiomiTouchFeature(int arg) {
++        try {
++            if (xaiomiTouchFeatureAidl == null) {
++                var name = "default";
++                var fqName = vendor.xiaomi.hw.touchfeature.ITouchFeature.DESCRIPTOR + "/" + name;
++                var b = android.os.Binder.allowBlocking(android.os.ServiceManager.waitForDeclaredService(fqName));
++                xaiomiTouchFeatureAidl = vendor.xiaomi.hw.touchfeature.ITouchFeature.Stub.asInterface(b);
++                
++                // Link to death
++                b.linkToDeath(() -> {
++                    android.util.Log.w("FP-HAX", "TouchFeature binder died. Reconnecting...");
++                    xaiomiTouchFeatureAidl = null;
++                }, 0);
++                
++                android.util.Log.d("FP-HAX", "Binded TouchFeature");
++            }
++            xaiomiTouchFeatureAidl.setTouchMode(0, 10, arg);
++        } catch(Throwable t) {
++            android.util.Log.e("FP-HAX", "TouchFeature", t);
++        }
++    }
++    private static void xiaomiFingerprintExtension(int arg) {
++        try {
++            if (xaiomiFingerprintExtensionAidl == null) {
++                var name = "default";
++                var fqName = vendor.xiaomi.hardware.fingerprintextension.IXiaomiFingerprint.DESCRIPTOR + "/" + name;
++                var b = android.os.Binder.allowBlocking(android.os.ServiceManager.waitForDeclaredService(fqName));
++                xaiomiFingerprintExtensionAidl = vendor.xiaomi.hardware.fingerprintextension.IXiaomiFingerprint.Stub.asInterface(b);
++                
++                // Link to death
++                b.linkToDeath(() -> {
++                    android.util.Log.w("FP-HAX", "FingerprintExtension binder died. Reconnecting...");
++                    xaiomiFingerprintExtensionAidl = null;
++                }, 0);
++                
++                android.util.Log.d("FP-HAX", "Binded FingerprintExtension");
++            }
++            xaiomiFingerprintExtensionAidl.extCmd(4, arg);
++        } catch(Throwable t) {
++            android.util.Log.e("FP-HAX", "FingerprintExtension", t);
++        }
++    }
++
+     @Override
+     public void dump(@NonNull PrintWriter pw, @NonNull String[] args) {
+         final int touchConfigId = mContext.getResources().getInteger(
+                 com.android.internal.R.integer.config_selected_udfps_touch_detection);
+         pw.println("mSensorProps=(" + mSensorProps + ")");
+@@ -1126,10 +1175,13 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+                     ((UdfpsView) view).configureDisplay(() -> dispatchOnUiReady(requestId));
+                 }
+             }
+         }
+ 
++        xaiomiTouchFeature(1);
++        xiaomiFingerprintExtension(1);
++
+         if (isOptical()) {
+             for (Callback cb : mCallbacks) {
+                 cb.onFingerDown();
+             }
+         }
+@@ -1175,10 +1227,13 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+             }
+         }
+         mOnFingerDown = false;
+         unconfigureDisplay(view);
+         cancelAodSendFingerUpAction();
++
++        xaiomiTouchFeature(0);
++        xiaomiFingerprintExtension(0);
+     }
+ 
+     /**
+      * Callback for fingerUp and fingerDown events.
+      */
+diff --git a/services/core/Android.bp b/services/core/Android.bp
+index d714602c0145..d0c368771937 100644
+--- a/services/core/Android.bp
++++ b/services/core/Android.bp
+@@ -238,10 +238,12 @@ java_library_static {
+         "device_config_service_flags_java",
+         "dreams_flags_lib",
+         "aconfig_new_storage_flags_lib",
+         "powerstats_flags_lib",
+         "locksettings_flags_lib",
++        "vendor.xiaomi.hardware.fingerprintextension-V1-java",
++        "vendor.xiaomi.hw.touchfeature-V1-java",
+     ],
+     javac_shard_size: 50,
+     javacflags: [
+         "-J--add-modules=jdk.compiler",
+         "-J--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
+-- 
+2.47.1
+
