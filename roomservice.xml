@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <remote name="hub" fetch="https://github.com" revision="fifteen" />
+
+  <project path="hardware/qcom-caf/sm8650/audio/agm" name="yaap/vendor_qcom_opensource_agm-sm8650" remote="hub" />
+  <project path="hardware/qcom-caf/sm8650/audio/pal" name="yaap/vendor_qcom_opensource_arpal-lx-sm8650" remote="hub" />
+  <project path="hardware/qcom-caf/sm8650/audio/primary-hal" name="yaap/hardware_qcom_audio-ar-sm8650" remote="hub" />
+  <project path="hardware/qcom-caf/sm8650/data-ipa-cfg-mgr" name="yaap/vendor_qcom_opensource_data-ipa-cfg-mgr-sm8650" remote="hub" />
+  <project path="hardware/qcom-caf/sm8650/dataipa" name="yaap/vendor_qcom_opensource_dataipa-sm8650" remote="hub" />
+  <project path="hardware/qcom-caf/sm8650/display" name="yaap/hardware_qcom-caf_sm8650_display" remote="hub" />
+  <project path="hardware/qcom-caf/sm8650/media" name="yaap/hardware_qcom-caf_sm8650_media" remote="hub" />
+  <project path="device/qcom/sepolicy_vndr/sm8650" name="yaap/device_qcom_sepolicy_vndr_sm8650" remote="hub" />
+
+  <project path="hardware/xiaomi" name="LineageOS/android_hardware_xiaomi" remote="hub" revision="lineage-22.1" />
+  <project path="kernel/xiaomi/peridot" name="Rohail33/Realking_xiaomi_peridot" remote="hub" revision="main" />
+  <project path="device/xiaomi/peridot" name="PeridotLions/device_xiaomi_peridot" remote="hub" revision="lineage-22.1" />
+  <project path="vendor/xiaomi/peridot" name="PeridotLions/vendor_xiaomi_peridot" remote="hub" revision="lineage-22.1" />
+</manifest>
