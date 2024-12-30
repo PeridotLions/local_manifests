@@ -16,3 +16,8 @@ curl -s https://raw.githubusercontent.com/PeridotLions/local_manifests/los-22.1/
 ```
 cd hardware/qcom-caf/common && curl -s https://raw.githubusercontent.com/PeridotLions/local_manifests/los-22.1/patches/hardware/qcom-caf/common/cec05faa45fa52528dc428d3a2193ef4f17f4835.patch | git am - && cd -
 ```
+
+## Xiaomi FastCharge support
+```
+cd hardware/xiaomi && curl -s https://raw.githubusercontent.com/PeridotLions/local_manifests/los-22.1/patches/hardware/xiaomi/10a0e68c708b3a0184452d3ca66fd28e35f9ccf5.patch | git am - && cd -
+```
