@@ -1,0 +1,29 @@
+From e26ea39ed78bcc9e4957668eff4e43a1e8806bd9 Mon Sep 17 00:00:00 2001
+From: PugzAreCute <me@pugzarecute.com>
+Date: Tue, 31 Dec 2024 20:57:12 +0530
+Subject: [PATCH] sm8650: drop vendor_hal_nxpnfc_service type
+
+* it conflicts with something else
+---
+ qva/vendor/common/service.te | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/qva/vendor/common/service.te b/qva/vendor/common/service.te
+index ad208fc..dc97687 100644
+--- a/qva/vendor/common/service.te
++++ b/qva/vendor/common/service.te
+@@ -43,11 +43,10 @@ type vendor_hal_xpanprovider_service,    hal_service_type, protected_service, se
+ type vendor_hal_qesdhalaidl_service,     hal_service_type, service_manager_type;
+ type vendor_hal_sensorscalibrateaidl_service, hal_service_type, protected_service, service_manager_type;
+ type vendor_hal_qspmhal_service,         hal_service_type, service_manager_type;
+ type vendor_hal_qspa_service,            hal_service_type, protected_service, service_manager_type;
+ type vendor_hal_spu_service,             hal_service_type, protected_service, service_manager_type;
+-type vendor_hal_nxpnfc_service,          hal_service_type, service_manager_type;
+ type vendor_hal_qconfig_service,         hal_service_type, protected_service, service_manager_type;
+ type vendor_hal_perf2_service,           hal_service_type, protected_service, service_manager_type;
+ type vendor_hal_vpp_service,             hal_service_type, protected_service, service_manager_type;
+ type vendor_hal_hexlp_service,           hal_service_type, protected_service, service_manager_type;
+ type vendor_hal_poweroptservice_service, hal_service_type, protected_service, service_manager_type;
+-- 
+2.47.1
+
