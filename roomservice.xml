@@ -15,4 +15,5 @@
   <project path="kernel/xiaomi/peridot" name="Rohail33/Realking_xiaomi_peridot" remote="hub" revision="main" />
   <project path="device/xiaomi/peridot" name="PeridotLions/device_xiaomi_peridot" remote="hub" revision="lineage-22.1" />
   <project path="vendor/xiaomi/peridot" name="PeridotLions/vendor_xiaomi_peridot" remote="hub" revision="lineage-22.1" />
+  <project path="device/xiaomi/peridot-kernel" name="project-dynamic/device_xiaomi_peridot-kernel" remote="hub" revision="15" />
 </manifest>
